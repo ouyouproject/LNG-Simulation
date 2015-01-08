@@ -25,30 +25,30 @@ public class LNG_ship {
 		this.status = s;
 	}
 	
-	public void action(FLNG flng,FSRU fsru,Wave wave){
+	public void action(FLNG flng,FSRU fsru,Wave wave,int time){
 		//海上で積み込み
 		if(this.status.equals(Status.flng)){
-			this.actionFlng(flng,wave);
+			this.actionFlng(flng,wave,time);
 		}
 		//移動中
 		else if(this.status.equals(Status.sailing)){
-			this.actionSailing();
+			this.actionSailing(time);
 		}
 		//地上に積み出し
 		else{
-			this.actionFsru(fsru,wave);
+			this.actionFsru(fsru,wave,time);
 		}
 	}
 	
-	private void actionFlng(FLNG flng,Wave wave){
+	private void actionFlng(FLNG flng,Wave wave,int time){
 		
 	}
 	
-	private void actionSailing(){
+	private void actionSailing(int time){
 		
 	}
 	
-	private void actionFsru(FSRU fsru,Wave wave){
+	private void actionFsru(FSRU fsru,Wave wave,int time){
 		
 	}
 	

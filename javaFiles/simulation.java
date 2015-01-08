@@ -30,9 +30,9 @@ public class simulation {
 			//各船が行動
 			for(int i=0; i<N; i++){
 				LNG_ship ship = shipArray[i];
-				ship.action(flng,fsru,wave);
+				ship.action(flng,fsru,wave,time);
 			}
-			tick(shipArray);
+			tick();
 		}
 		
 		//結果を表示
@@ -41,13 +41,10 @@ public class simulation {
 	}
 	
 	//時刻を進める
-	public static void tick(LNG_ship[] shipArray){
-		if(time>=17){
+	public static void tick(){
+		if(time>=16){
 			time = 8;
 			day++;
-			//各船に処理を行う
-			
-			
 		}
 		else{
 			time++;
