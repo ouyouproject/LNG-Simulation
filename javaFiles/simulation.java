@@ -1,13 +1,14 @@
 package javaFiles;
 
 public class simulation {
+	//パラメータ
 	private static int N = 5;
 	private static double W0 = 10000;
 	private static double W = 10000;
 	private static double V = 30;
 	
-	private static int time = 8;//8時から17時
-	private static int day = 0;
+	private static int time = 8;//8時から
+	private static int day = 1;
 	
 	private static final int finish_year = 3;//三年で終了
 	
@@ -16,7 +17,6 @@ public class simulation {
 	private static LNG_ship[] shipArray = new LNG_ship[N];
 	private static Wave wave = new Wave();
 	
-	
 	public static void main(){
 		//船インスタンスを生成
 		for(int i=0; i<N; i++){
@@ -24,7 +24,7 @@ public class simulation {
 		}
 		
 		//時刻ごとに実行
-		while(day<365*finish_year){
+		while(day<=365*finish_year){
 			//FLNGで汲み上げ
 			flng.getLNG();
 			//各船が行動
@@ -42,12 +42,10 @@ public class simulation {
 	
 	//時刻を進める
 	public static void tick(){
-		if(time>=16){
-			time = 8;
+		time++;
+		if(time>=24){
+			time = 0;
 			day++;
-		}
-		else{
-			time++;
 		}
 	}
 }
