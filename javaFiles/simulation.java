@@ -17,7 +17,7 @@ public class simulation {
 	private static LNG_ship[] shipArray = new LNG_ship[N];
 	private static Wave wave = new Wave();
 	
-	public static void main(){
+	public static void main(String[] args){
 		//船インスタンスを生成
 		for(int i=0; i<N; i++){
 			shipArray[i] = new LNG_ship(W, V);

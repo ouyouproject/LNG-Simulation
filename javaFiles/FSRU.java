@@ -24,7 +24,7 @@ public class FSRU {
 			ship.resetAmount();
 			
 			//初期化
-			ship.resetLoadingTime();;
+			ship.resetLoadingTime();
 			ship.setFinishLoading();
 			this.vacant = true;
 		}

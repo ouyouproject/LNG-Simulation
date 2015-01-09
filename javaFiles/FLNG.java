@@ -22,7 +22,9 @@ public class FLNG {
 	public boolean getVacant() {
 		return this.vacant;
 	}
-	
+	public double getAmount(){
+		return this.amount;
+	}
 	//係船
 	public void load(LNG_ship ship) {
 		this.vacant = false;

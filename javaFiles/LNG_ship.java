@@ -19,7 +19,7 @@ public class LNG_ship {
 	public LNG_ship(double input_W, double input_V) {
 		this.W = input_W;
 		this.V = input_V;
-		this.status = Status.fsru;
+		this.status = Status.sailing;
 	}
 	
 	public void resetAmount() {
@@ -171,6 +171,7 @@ public class LNG_ship {
 		else if(this.finishLoading){
 			//出発
 			this.startLoading = false;
+			this.finishLoading = false;
 			this.destination = Status.flng;
 			this.status = Status.sailing;
 			this.actionSailing(time);
