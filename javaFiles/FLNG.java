@@ -43,5 +43,8 @@ public class FLNG {
 			this.vacant = true;
 		}
 	}
-	
+	@Override
+	public String toString() {
+		return "FLNG\nLNG\t"+this.amount+"\nvacant\t"+this.vacant;
+	}
 }

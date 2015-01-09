@@ -7,8 +7,8 @@ public class Wave {
 	private final double q = 0.3;//以上→以下
 	private boolean judge = true;//波高が以下であるか
 	private final int waveSpan = 6;//何時間ごとに波高が変化するか
-	
-	public boolean enableToLoad(int time){
+
+	public Wave(int time){
 		//変化するとき
 		if(time%this.waveSpan==0){
 			double rand = Math.random();
@@ -22,11 +22,20 @@ public class Wave {
 					this.judge = true;
 				}
 			}
-			return this.judge;
 		}
-		//波の変化なし
+	}
+	
+	public boolean enableToLoad(){
+		return this.judge;
+	}
+	
+	@Override
+	public String toString() {
+		if(this.enableToLoad()){
+			return "低波";
+		}
 		else{
-			return this.judge;
+			return "高波";
 		}
 	}
 }

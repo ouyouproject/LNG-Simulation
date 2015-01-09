@@ -29,5 +29,8 @@ public class FSRU {
 			this.vacant = true;
 		}
 	}
-	
+	@Override
+	public String toString() {
+		return "FSRU\nLNG\t"+this.amount+"\nvacant\t"+this.vacant;
+	}
 }

@@ -1,14 +1,17 @@
 package javaFiles;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 
 public class LNG_ship {
+	private int id;
 	private double amount = 0;
 	private int watingTime_sum = 0;//待ち時間の合計
 	private double W;
 	private double V;
 	private final double L = 2000;//FLNGの座標
 	private double position = 0;//FSRUからの座標
-	public static enum Status{flng,sailing,fsru;}
+	public static enum Status{flng,sailing,fsru,wait;}
 	private Status status;//どこにいるのか
 	private Status destination = Status.flng;//目的地
 	private double transportCost;//輸送費（一往復の）
@@ -16,10 +19,14 @@ public class LNG_ship {
 	private boolean finishLoading = false;//係船の終了
 	private int loadingTime = 0;//係船開始からの時間
 	
-	public LNG_ship(double input_W, double input_V) {
+	public LNG_ship(double input_W, double input_V, int input_id, Status input_statsu) {
+		this.id = input_id;
 		this.W = input_W;
 		this.V = input_V;
-		this.status = Status.sailing;
+		this.status = input_statsu;
+	}
+	public int getId() {
+		return this.id;
 	}
 	
 	public void resetAmount() {
@@ -76,7 +83,7 @@ public class LNG_ship {
 		if(!this.startLoading){
 			if(time>=8&&time<17){
 				//波高が低い時
-				if(wave.enableToLoad(time)){
+				if(wave.enableToLoad()){
 					if(flng.getVacant()){
 						//係船を開始
 						this.startLoading = true;
@@ -99,18 +106,23 @@ public class LNG_ship {
 		}
 		//係船を終えた場合
 		else if(this.finishLoading){
-			//波高が低い時
-			if(wave.enableToLoad(time)){
-				//出発
-				this.finishLoading = false;
-				this.startLoading = false;
-				this.destination = Status.fsru;
-				this.status = Status.sailing;
-				this.actionSailing(time);
+			if(time>=8&&time<17){
+				//波高が低い時
+				if(wave.enableToLoad()){
+					//出発
+					this.finishLoading = false;
+					this.startLoading = false;
+					this.destination = Status.fsru;
+					this.status = Status.sailing;
+					this.actionSailing(time);
+				}
+				//波高が高い時
+				else{
+					this.watingTime_sum++;
+				}
 			}
-			//波高が高い時
 			else{
-				this.watingTime_sum++;
+				//17時以降にどうするか
 			}
 		}
 		//係船中
@@ -168,18 +180,45 @@ public class LNG_ship {
 			}
 		}
 		//係船を終えた場合
+		
 		else if(this.finishLoading){
-			//出発
-			this.startLoading = false;
-			this.finishLoading = false;
-			this.destination = Status.flng;
-			this.status = Status.sailing;
-			this.actionSailing(time);
+			if(time>=8&&time<17){
+				//出発
+				this.startLoading = false;
+				this.finishLoading = false;
+				this.destination = Status.flng;
+				this.status = Status.sailing;
+				this.actionSailing(time);
+			}
+			else{
+				//17時以降にどうするか
+			}
 		}
 		//係船中
 		else{
 			fsru.load(this);
 		}
 	}
-	
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("id:\t").append(this.id)
+			.append("\nLNG:\t").append(this.amount)
+			.append("\n状態:\t");
+		switch (this.status) {
+		case flng:
+			result.append("海上").append("\tloadingTime:\t").append(this.loadingTime);
+			break;
+		case sailing:
+			result.append("移動中 to ").append(this.destination).append("\tposition:\t").append(this.position);
+			break;
+		case fsru:
+			result.append("港").append("\tloadingTime:\t").append(this.loadingTime);
+			break;
+			
+		default:
+			break;
+		}
+		return result.toString();
+	}
 }
