@@ -50,6 +50,9 @@ public class LNG_ship {
 	public void setFinishLoading() {
 		this.finishLoading = true;
 	}
+	public int getWaitingTime() {
+		return this.watingTime_sum;
+	}
 	
 	//simulation.javaから呼ばれる
 	public void action(FLNG flng,FSRU fsru,Wave wave,int time){
@@ -131,7 +134,7 @@ public class LNG_ship {
 		}
 		//FSRUに向かうとき
 		else if(this.destination.equals(Status.fsru)){
-			position -= V;
+			this.position -= V;
 			//到着した時
 			if(this.position<0){
 				this.position = 0;

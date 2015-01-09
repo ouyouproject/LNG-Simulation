@@ -33,6 +33,7 @@ public class simulation {
 				ship.action(flng,fsru,wave,time);
 			}
 			tick();
+			
 		}
 		
 		//結果を表示
