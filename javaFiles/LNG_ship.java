@@ -1,6 +1,5 @@
 package javaFiles;
 
-import javax.naming.spi.DirStateFactory.Result;
 
 
 public class LNG_ship {
@@ -87,6 +86,7 @@ public class LNG_ship {
 					if(flng.getVacant()){
 						//係船を開始
 						this.startLoading = true;
+						flng.setVacant(false);
 						flng.load(this);
 					}
 					else{
@@ -168,6 +168,7 @@ public class LNG_ship {
 				if(fsru.getVacant()){
 					//係船を開始
 					this.startLoading = true;
+					fsru.setVacant(false);
 					fsru.load(this);
 				}
 				else{
@@ -220,5 +221,8 @@ public class LNG_ship {
 			break;
 		}
 		return result.toString();
+	}
+	public String toCsv() {
+		return this.position+","+this.amount+","+this.loadingTime;
 	}
 }

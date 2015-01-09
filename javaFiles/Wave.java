@@ -8,7 +8,8 @@ public class Wave {
 	private boolean judge = true;//波高が以下であるか
 	private final int waveSpan = 6;//何時間ごとに波高が変化するか
 
-	public Wave(int time){
+	
+	public void updateWave(int time){
 		//変化するとき
 		if(time%this.waveSpan==0){
 			double rand = Math.random();
@@ -36,6 +37,14 @@ public class Wave {
 		}
 		else{
 			return "高波";
+		}
+	}
+	public String toCsv(){
+		if(this.enableToLoad()){
+			return Integer.toString(1);
+		}
+		else{
+			return Integer.toString(0);
 		}
 	}
 }

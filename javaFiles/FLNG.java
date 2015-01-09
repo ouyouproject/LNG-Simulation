@@ -6,6 +6,7 @@ public class FLNG {
 	private double W0;//キャパシティ
 	private double T1 = 54;//積載時間
 	private boolean vacant = true;//係船できるか。falseなら他の船が使用中
+	private boolean nextVacant = true;//次の時間にvacantがtrueか
 	private double amount;//LNGの量
 	public FLNG(double input_W0) { 
 		this.W0 = input_W0;
@@ -25,9 +26,16 @@ public class FLNG {
 	public double getAmount(){
 		return this.amount;
 	}
+	public void updateVacant(){
+		this.vacant = this.nextVacant;
+	}
+	public void setVacant(boolean input){
+		this.vacant = input;
+	}
+	
 	//係船
 	public void load(LNG_ship ship) {
-		this.vacant = false;
+		this.nextVacant = false;
 		ship.addLoadingTime();
 		double addLNG = ship.getW()/this.T1;
 		if(this.amount<addLNG){
@@ -38,13 +46,22 @@ public class FLNG {
 		
 		//係船が終わった時
 		if(ship.getLoadingTime()>=this.T1){
-			ship.resetLoadingTime();;
+			ship.resetLoadingTime();
 			ship.setFinishLoading();
-			this.vacant = true;
+			this.nextVacant = true;
 		}
 	}
 	@Override
 	public String toString() {
 		return "FLNG\nLNG\t"+this.amount+"\nvacant\t"+this.vacant;
+	}
+	public String toCsv(){
+		String result = this.amount+",";
+		if(this.vacant){
+			return result+0;
+		}
+		else{
+			return result+1;
+		}
 	}
 }
