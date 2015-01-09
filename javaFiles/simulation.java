@@ -2,9 +2,9 @@ package javaFiles;
 
 public class simulation {
 	//パラメータ
-	private static int N = 5;
-	private static double W0 = 10000;
-	private static double W = 10000;
+	private static int N = 1;
+	private static double W0 = 1000000;
+	private static double W = 200000;
 	private static double V = 30;
 	
 	private static int time = 8;//8時から
@@ -17,7 +17,7 @@ public class simulation {
 	private static LNG_ship[] shipArray = new LNG_ship[N];
 	private static Wave wave = new Wave();
 	
-	public static void main(){
+	public static void main(String[] args){
 		//船インスタンスを生成
 		for(int i=0; i<N; i++){
 			shipArray[i] = new LNG_ship(W, V);
@@ -25,8 +25,15 @@ public class simulation {
 		
 		//時刻ごとに実行
 		while(day<=365*finish_year){
+			System.out.println("========================");
+			if(!wave.enableToLoad(time)){
+				System.out.println("高波");
+			}
+			System.out.println(day+"日目"+time+"時");
+			System.out.println("FSRU :" + fsru.getAmount());
 			//FLNGで汲み上げ
 			flng.getLNG();
+			
 			//各船が行動
 			for(int i=0; i<N; i++){
 				LNG_ship ship = shipArray[i];
@@ -47,6 +54,9 @@ public class simulation {
 		if(time>=24){
 			time = 0;
 			day++;
+			if(day==30){
+				System.exit(1);
+			}
 		}
 	}
 }
