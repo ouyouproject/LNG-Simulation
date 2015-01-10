@@ -1,29 +1,54 @@
+day = [];
+time = [];
+enableLoad = [];
+FSRU_amount = [];
+FSRU_loading = [];
+FLNG_amount = [];
+FLNG_position = [];
+number_of_ships = 0;
+
+function createArray(csvData) {
+    var tempArray = csvData.split("\n");
+    var csvArray = [];
+    for(var i = 0; i<tempArray.length;i++){
+        csvArray[i] = tempArray[i].split(",");
+    }
+    console.log(csvArray[1][0]);//一つ目行番号、もうひとつ何番目か
+    number_of_ships = (csvArray[2].length - 8) / 3;
+    //console.log(number_of_ships);
+    //console.log(csvArray[2].length);
+}
 
 function getCSVFile() {
+    console.log("最初")
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
+        console.log("その次")
         createArray(xhr.responseText);
     };
     
     xhr.open("get", "data.csv", true);
     xhr.send(null);
 }
-getCSVFile();
 
+
+var myPromise = $.when(getCSVFile());
+
+myPromise.done(function() {
+             console.log("最後");
+});
+
+/**
 function createXMLHttpRequest() {
     var XMLhttpObject = null;
     XMLhttpObject = new XMLHttpRequest();
     return XMLhttpObject;
 }
+ **/
 
-function createArray(csvData) {
-    var tempArray = csvData.split("\n");
-    var csvArray = new Array();
-    for(var i = 0; i<tempArray.length;i++){
-        csvArray[i] = tempArray[i].split(",");
-    }
-    console.log(csvArray);
-}
+
+//var number_of_ships = (csvArray[0].length - 7)/2 ;
+
 /**
 var SCREEN_SIZE = 500.0;                    // キャンバスの幅
 var SIDE_CELLS = 50.0;                     // 一辺のセルの数
