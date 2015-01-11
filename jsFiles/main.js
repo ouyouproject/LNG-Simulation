@@ -86,9 +86,14 @@ function start(){
 
 function draw(){
     context.clearRect(5, 0, SCREEN_SIZE-10, SCREEN_SIZE);
-    context.fillStyle = 'yellow';
     for(var j = 0; j < number_of_ships; j++){
-        context.fillRect(ship_position[timecounter][j],CELL_SIZE*j,CELL_SIZE,CELL_SIZE);
+        if(ship_amount[timecounter][j] == 0){
+            context.fillStyle = 'yellow';
+            context.fillRect(ship_position[timecounter][j],CELL_SIZE*j,CELL_SIZE,CELL_SIZE);
+        }else{
+            context.fillStyle = 'red';
+            context.fillRect(ship_position[timecounter][j],CELL_SIZE*j,CELL_SIZE,CELL_SIZE);
+        }
     }
     timecounter++;
     console.log(timecounter);
