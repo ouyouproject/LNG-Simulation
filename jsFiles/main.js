@@ -4,8 +4,11 @@ enableLoad = [];
 FSRU_amount = [];
 FSRU_loading = [];
 FLNG_amount = [];
-FLNG_position = [];
+FLNG_loading = [];
 number_of_ships = 0;
+ship_position = [];//以下二次元配列にし、一つ目のインデックスは他のと同じ（行番号てきな）2つ目のインデックスは船の番号
+ship_amount = [];
+ship_loadingTime = [];
 
 function createArray(csvData) {
     var tempArray = csvData.split("\n");
@@ -14,16 +17,40 @@ function createArray(csvData) {
         csvArray[i] = tempArray[i].split(",");
     }
     console.log(csvArray[1][0]);//一つ目行番号、もうひとつ何番目か
-    number_of_ships = (csvArray[2].length - 8) / 3;
+    CsvToArray(csvArray);
     //console.log(number_of_ships);
     //console.log(csvArray[2].length);
 }
 
-function getCSVFile() {
+function CsvToArray(csvArray){//csvを配列に代入
+    number_of_ships = (csvArray[2].length - 8) / 3;
+    for(var i = 2; i < csvArray.length - 1; i++){//二次元配列を生成
+        ship_position[i-2] = new Array(number_of_ships);
+        ship_amount[i-2] = new Array(number_of_ships);
+        ship_loadingTime[i-2] = new Array(number_of_ships);
+    }
+    for(var i = 2; i < csvArray.length - 1; i++){
+        day[i-2] = csvArray[i][0];
+        time[i-2] = csvArray[i][1];
+        enableLoad[i-2] = csvArray[i][2];
+        FSRU_amount[i-2] = csvArray[i][3];
+        FSRU_loading[i-2] = csvArray[i][4];
+        FLNG_amount[i-2] = csvArray[i][5];
+        FLNG_loading[i-2] = csvArray[i][6];
+        for(var j = 0; j < number_of_ships; j++){
+            ship_position[i-2][j] = csvArray[i][7 + 3*j];
+            ship_amount[i-2][j] = csvArray[i][8 + 3*j];
+            ship_position[i-2][j] = csvArray[i][9 + 3*j];
+        }
+    }
+    console.log("day初日" + day[0]);//行数
+}
+
+function pursue() {
     console.log("最初")
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
-        console.log("その次")
+        //この中の関数が最後に実行されるっぽい
         createArray(xhr.responseText);
     };
     
@@ -31,12 +58,7 @@ function getCSVFile() {
     xhr.send(null);
 }
 
-
-var myPromise = $.when(getCSVFile());
-
-myPromise.done(function() {
-             console.log("最後");
-});
+pursue();
 
 /**
 function createXMLHttpRequest() {
