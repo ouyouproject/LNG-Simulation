@@ -10,6 +10,7 @@ number_of_ships = 0;
 ship_position = [];//以下二次元配列にし、一つ目のインデックスは他のと同じ（行番号てきな）2つ目のインデックスは船の番号
 ship_amount = [];
 ship_loadingTime = [];
+timecounter = 0;
 
 function createArray(csvData) {
     var tempArray = csvData.split("\n");
@@ -54,6 +55,8 @@ function pursue() {
         //①この中の関数が最後に実行されるっぽい
         createArray(xhr.responseText);
         start();
+        draw();
+        setTimeout(draw, 1000/FPS);
     };
     
     xhr.open("get", "data.csv", true);
@@ -63,10 +66,10 @@ function pursue() {
 pursue();
 
 //以下可視化の記述
-var SCREEN_SIZE = 500.0;                    // キャンバスの幅
+var SCREEN_SIZE = 515.0;                    // キャンバスの幅
 var SIDE_CELLS = 50.0;                     // 一辺のセルの数
 var CELL_SIZE = SCREEN_SIZE / SIDE_CELLS; // セルの幅
-var FPS = 0.5;                             // フレームレート
+var FPS = 2;                             // フレームレート
 var canvas;                     //= document.getElementById('world');
 var context;                    //= canvas.getContext('2d');
 
@@ -77,8 +80,19 @@ function start(){
     canvas.style.width = canvas.style.height = SCREEN_SIZE*scaleRate+'px';  // キャンバスを引き伸ばし
     context = canvas.getContext('2d');                // コンテキスト
     context.fillStyle = 'rgb(211, 85, 149)';          // 色
-    context.fillRect(0,0,5,500);
-    context.fillRect(495,0,5,500);
+    context.fillRect(0,0,5,515);
+    context.fillRect(510,0,5,515);
+}
+
+function draw(){
+    context.clearRect(5, 0, SCREEN_SIZE-10, SCREEN_SIZE);
+    context.fillStyle = 'yellow';
+    for(var j = 0; j < number_of_ships; j++){
+        context.fillRect(ship_position[timecounter][j],CELL_SIZE*j,CELL_SIZE,CELL_SIZE);
+    }
+    timecounter++;
+    console.log(timecounter);
+    setTimeout(draw, 1000/FPS);
 }
 
 
