@@ -1,3 +1,4 @@
+//グローバル変数で記述、ただし①内でしか使ってはいけない。
 day = [];
 time = [];
 enableLoad = [];
@@ -38,9 +39,9 @@ function CsvToArray(csvArray){//csvを配列に代入
         FLNG_amount[i-2] = csvArray[i][5];
         FLNG_loading[i-2] = csvArray[i][6];
         for(var j = 0; j < number_of_ships; j++){
-            ship_position[i-2][j] = csvArray[i][7 + 3*j];
+            ship_position[i-2][j] = csvArray[i][7 + 3*j]/4;//画面と合わせるために割る4
             ship_amount[i-2][j] = csvArray[i][8 + 3*j];
-            ship_position[i-2][j] = csvArray[i][9 + 3*j];
+            ship_loadingTime[i-2][j] = csvArray[i][9 + 3*j];
         }
     }
     console.log("day初日" + day[0]);//行数
@@ -50,8 +51,9 @@ function pursue() {
     console.log("最初")
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
-        //この中の関数が最後に実行されるっぽい
+        //①この中の関数が最後に実行されるっぽい
         createArray(xhr.responseText);
+        start();
     };
     
     xhr.open("get", "data.csv", true);
@@ -59,6 +61,27 @@ function pursue() {
 }
 
 pursue();
+
+//以下可視化の記述
+var SCREEN_SIZE = 500.0;                    // キャンバスの幅
+var SIDE_CELLS = 50.0;                     // 一辺のセルの数
+var CELL_SIZE = SCREEN_SIZE / SIDE_CELLS; // セルの幅
+var FPS = 0.5;                             // フレームレート
+var canvas;                     //= document.getElementById('world');
+var context;                    //= canvas.getContext('2d');
+
+function start(){
+    canvas = document.getElementById('world'); // canvas要素を取得
+    canvas.width = canvas.height = SCREEN_SIZE; // キャンバスのサイズを設定
+    var scaleRate = Math.min(window.innerHeight/SCREEN_SIZE, window.innerHeight/SCREEN_SIZE); // Canvas引き伸ばし率の取得
+    canvas.style.width = canvas.style.height = SCREEN_SIZE*scaleRate+'px';  // キャンバスを引き伸ばし
+    context = canvas.getContext('2d');                // コンテキスト
+    context.fillStyle = 'rgb(211, 85, 149)';          // 色
+    context.fillRect(0,0,5,500);
+    context.fillRect(495,0,5,500);
+}
+
+
 
 /**
 function createXMLHttpRequest() {
