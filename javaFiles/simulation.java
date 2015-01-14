@@ -6,8 +6,8 @@ import java.io.PrintWriter;
 
 public class simulation {
 	//パラメータ
-	private static int N = 2;
-	private static double W0 = 10000;
+	private static int N = 5;
+	private static double W0 = 1000000;
 	private static double W = 10000;
 	private static double V = 30;
 	
@@ -45,22 +45,22 @@ public class simulation {
 				fsru.updateVacant();
 				wave.updateWave(time);
 				pwPrint(pw);
-				System.out.println("=====================================================");
-				System.out.println(day+"日目"+time+"時");
-				System.out.println(wave.toString());
+				//System.out.println("=====================================================");
+				//System.out.println(day+"日目"+time+"時");
+				//System.out.println(wave.toString());
 				//FLNGで汲み上げ
 				flng.getLNG();
 				//各船が行動
-				System.out.println("-------------");
+				//System.out.println("-------------");
 				for(int i=0; i<N; i++){
 					LNG_ship ship = shipArray[i];
 					ship.action(flng,fsru,wave,time);
-					System.out.println(ship.toString());
-					System.out.println("-------------");
+					//System.out.println(ship.toString());
+					//System.out.println("-------------");
 				}
-				System.out.println(flng.toString());
-				System.out.println();
-				System.out.println(fsru.toString());
+				//System.out.println(flng.toString());
+				//System.out.println();
+				//System.out.println(fsru.toString());
 				tick();
 			}
 			pw.close();
@@ -79,9 +79,11 @@ public class simulation {
 			time = 0;
 			day++;
 			//30日まで実験
-			if(day>=30){
+			/*
+			if(day>=finish_year*365){
 				System.exit(1);
 			}
+			*/
 		}
 	}
 	//csv出力
