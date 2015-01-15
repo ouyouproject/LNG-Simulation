@@ -18,7 +18,7 @@ function createArray(csvData) {
     for(var i = 0; i<tempArray.length;i++){
         csvArray[i] = tempArray[i].split(",");
     }
-    console.log(csvArray[1][0]);//一つ目行番号、もうひとつ何番目か
+    //console.log(csvArray[1][0]);//一つ目行番号、もうひとつ何番目か
     CsvToArray(csvArray);
     //console.log(number_of_ships);
     //console.log(csvArray[2].length);
@@ -45,11 +45,11 @@ function CsvToArray(csvArray){//csvを配列に代入
             ship_loadingTime[i-2][j] = csvArray[i][9 + 3*j];
         }
     }
-    console.log("day初日" + day[0]);//行数
+    //console.log("day初日" + day[0]);//行数
 }
 
 function pursue() {
-    console.log("最初")
+    //console.log("最初")
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
         //①この中の関数が最後に実行されるっぽい
@@ -95,12 +95,47 @@ function draw(){
             context.fillRect(ship_position[timecounter][j],CELL_SIZE*j,CELL_SIZE,CELL_SIZE);
         }
     }
+    write_wave_height();
+    write_amount_of_ships();
     timecounter++;
-    console.log(timecounter);
+    //console.log(timecounter);
     setTimeout(draw, 1000/FPS);
 }
 
+function write_wave_height(){
+    if (enableLoad[timecounter] == 1){
+        var text=document.createTextNode("波的に出航可能ですよ");
+    }else{
+        var text=document.createTextNode("やめたまえ");
+    }
+    if(wave_height.childNodes.length != 0){
+        wave_height.removeChild(wave_height.childNodes[0]);
+    }
+    wave_height.appendChild(text);
+}
 
+
+function write_amount_of_ships(){
+    console.log(amount_of_ships.childNodes.length);
+    var before_text = "";
+    for(var j = 0; j < number_of_ships; j++){
+        /**
+        if(ship_amount[timecounter][j] == 0){
+            context.fillStyle = 'yellow';
+            context.fillRect(ship_position[timecounter][j],CELL_SIZE*j,CELL_SIZE,CELL_SIZE);
+        }else{
+            context.fillStyle = 'red';
+            context.fillRect(ship_position[timecounter][j],CELL_SIZE*j,CELL_SIZE,CELL_SIZE);
+        }
+         **/
+        before_text = before_text + ("船"+ (j + 1) + "の積載率は" + ship_amount[timecounter][j]/100.0 + "%です。");
+        var text=document.createTextNode(before_text);
+    }
+    if(amount_of_ships.childNodes.length != 0){
+        amount_of_ships.removeChild(amount_of_ships.childNodes[0]);
+    }
+    amount_of_ships.appendChild(text);
+}
 
 /**
 function createXMLHttpRequest() {
