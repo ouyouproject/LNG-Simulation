@@ -25,9 +25,13 @@ public class simulation {
 	
 	public static void main(String[] args){
 		try{
-			String filePath = "data.csv";
+			String filePath = "data2.csv";
 			FileWriter fw = new FileWriter(filePath,false);//上書き
 			PrintWriter pw = new PrintWriter(fw);
+			//基本的なデータを書き込み
+			StringBuilder prams = new StringBuilder();
+			prams.append("W0,").append(W0).append(",W,").append(W).append(",N,").append(N).append(",FLNG position,").append(LNG_ship.L).append(",FSRU position,").append(0);
+			pw.println(prams.toString());
 			//ヘッダを入力
 			pw.print(" , ,wave,FSRU,,FLNG,");
 			//船インスタンスを生成
@@ -36,7 +40,7 @@ public class simulation {
 				if(i>0){
 					shipArray[i].setPrevShip(shipArray[i-1]);
 				}
-				pw.print(",ship"+i+",,");
+				pw.print(",ship"+i+",,,,");
 			}
 			shipArray[0].setPrevShip(shipArray[N-1]);
 			fsru.setPrevShipId(N-1);
@@ -44,7 +48,7 @@ public class simulation {
 			pw.println();
 			pw.print("day,time,enableLoad,amount,loading,amount,loading");
 			for(int i=0; i<N; i++){
-				pw.print(",positon,amount,loadingTime");
+				pw.print(",positon,amount,loadingTime,V,nextGoalTime");
 			}
 			pw.println();
 			
@@ -124,7 +128,7 @@ public class simulation {
 		}
 	}
 	//csv出力
-	public static void pwPrint(PrintWriter pw) {
+	public static void pwPrint(PrintWriter pw){
 		pw	.append(Integer.toString(day)).append(",")
 			.append(Integer.toString(time)).append(",")
 			.append(wave.toCsv()).append(",")

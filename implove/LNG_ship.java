@@ -484,6 +484,6 @@ public class LNG_ship {
 		return result.toString();
 	}
 	public String toCsv() {
-		return this.position+","+this.amount+","+this.loadingTime;
+		return this.position+","+this.amount+","+this.loadingTime+","+this.V+","+this.prevShip.getLeavingTime();
 	}
 }
