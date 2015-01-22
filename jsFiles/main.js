@@ -97,7 +97,8 @@ function draw(){
     }
     write_wave_height();
     write_amount_of_ships();
-    write_amount_of_FSRU()
+    write_amount_of_FSRU();
+    write_amount_of_FLNG();
     timecounter++;
     //console.log(timecounter);
     setTimeout(draw, 1000/FPS);
@@ -144,4 +145,12 @@ function write_amount_of_FSRU(){
         amount_of_FSRU.removeChild(amount_of_FSRU.childNodes[0]);
     }
     amount_of_FSRU.appendChild(text);
+}
+
+function write_amount_of_FLNG(){
+    var text=document.createTextNode("FLNGの積載量は" + FLNG_amount[timecounter]);
+    if(amount_of_FLNG.childNodes.length != 0){
+        amount_of_FLNG.removeChild(amount_of_FLNG.childNodes[0]);
+    }
+    amount_of_FLNG.appendChild(text);
 }
