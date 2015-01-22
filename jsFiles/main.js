@@ -97,14 +97,18 @@ function draw(){
     for(var j = 0; j < number_of_ships; j++){
         if(ship_amount[timecounter][j] == 0){
             context.fillStyle = 'yellow';
-            context.fillRect(ship_position[timecounter][j],(CELL_SIZE + 10)*j,CELL_SIZE,CELL_SIZE);
+            context.fillRect(ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10,CELL_SIZE,CELL_SIZE);
+            context.fillStyle = "black";
+            context.fillText(ship_amount[timecounter][j]/100.0, ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10);
         }else{
             context.fillStyle = 'red';
-            context.fillRect(ship_position[timecounter][j],(CELL_SIZE + 10)*j,CELL_SIZE,CELL_SIZE);
+            context.fillRect(ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10,CELL_SIZE,CELL_SIZE);
+            context.fillStyle = "black";
+            context.fillText(Math.round(ship_amount[timecounter][j]/100.0), ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10);
         }
     }
     write_wave_height();
-    write_amount_of_ships();
+    //write_amount_of_ships();
     write_amount_of_FSRU();
     write_amount_of_FLNG();
     timecounter++;
@@ -115,8 +119,12 @@ function draw(){
 function write_wave_height(){
     if (enableLoad[timecounter] == 1){
         var text=document.createTextNode("波的に出航可能ですよ");
+        var element = document.getElementById("wave_height");
+        element.style.color = 'black';
     }else{
         var text=document.createTextNode("やめたまえ");
+        var element = document.getElementById("wave_height");
+        element.style.color = 'red';
     }
     if(wave_height.childNodes.length != 0){
         wave_height.removeChild(wave_height.childNodes[0]);
