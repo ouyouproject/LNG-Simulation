@@ -77,7 +77,7 @@ pursue();
 var SCREEN_SIZE = 515.0;                    // キャンバスの幅
 var SIDE_CELLS = 50.0;                     // 一辺のセルの数
 var CELL_SIZE = SCREEN_SIZE / SIDE_CELLS; // セルの幅
-var FPS = 2;                             // フレームレート
+var FPS = 4;                             // フレームレート
 var canvas;                     //= document.getElementById('world');
 var context;                    //= canvas.getContext('2d');
 
