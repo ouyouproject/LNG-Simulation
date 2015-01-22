@@ -1,4 +1,5 @@
 //グローバル変数で記述、ただし①内でしか使ってはいけない。
+length = 0;
 day = [];
 time = [];
 enableLoad = [];
@@ -10,6 +11,8 @@ number_of_ships = 0;
 ship_position = [];//以下二次元配列にし、一つ目のインデックスは他のと同じ（行番号てきな）2つ目のインデックスは船の番号
 ship_amount = [];
 ship_loadingTime = [];
+ship_v = [];
+ship_nextGoalTime = [];
 timecounter = 0;
 
 function createArray(csvData) {
@@ -25,24 +28,29 @@ function createArray(csvData) {
 }
 
 function CsvToArray(csvArray){//csvを配列に代入
-    number_of_ships = (csvArray[2].length - 8) / 3;
-    for(var i = 2; i < csvArray.length - 1; i++){//二次元配列を生成
-        ship_position[i-2] = new Array(number_of_ships);
-        ship_amount[i-2] = new Array(number_of_ships);
-        ship_loadingTime[i-2] = new Array(number_of_ships);
+    length = csvArray[0][7]
+    number_of_ships = (csvArray[3].length - 8) / 5;
+    for(var i = 3; i < csvArray.length - 1; i++){//二次元配列を生成
+        ship_position[i-3] = new Array(number_of_ships);
+        ship_amount[i-3] = new Array(number_of_ships);
+        ship_loadingTime[i-3] = new Array(number_of_ships);
+        ship_v[i-3] = new Array(number_of_ships);
+        ship_nextGoalTime[i-3] = new Array(number_of_ships);
     }
-    for(var i = 2; i < csvArray.length - 1; i++){
-        day[i-2] = csvArray[i][0];
-        time[i-2] = csvArray[i][1];
-        enableLoad[i-2] = csvArray[i][2];
-        FSRU_amount[i-2] = csvArray[i][3];
-        FSRU_loading[i-2] = csvArray[i][4];
-        FLNG_amount[i-2] = csvArray[i][5];
-        FLNG_loading[i-2] = csvArray[i][6];
+    for(var i = 3; i < csvArray.length - 1; i++){
+        day[i-3] = csvArray[i][0];
+        time[i-3] = csvArray[i][1];
+        enableLoad[i-3] = csvArray[i][2];
+        FSRU_amount[i-3] = csvArray[i][3];
+        FSRU_loading[i-3] = csvArray[i][4];
+        FLNG_amount[i-3] = csvArray[i][5];
+        FLNG_loading[i-3] = csvArray[i][6];
         for(var j = 0; j < number_of_ships; j++){
-            ship_position[i-2][j] = csvArray[i][7 + 3*j]/4*2.0/5.0;//画面と合わせるために割る4
-            ship_amount[i-2][j] = csvArray[i][8 + 3*j];
-            ship_loadingTime[i-2][j] = csvArray[i][9 + 3*j];
+            ship_position[i-3][j] = csvArray[i][7 + 5*j]/4*2.0/(length/1000);//画面と合わせるために割る4
+            ship_amount[i-3][j] = csvArray[i][8 + 5*j];
+            ship_loadingTime[i-3][j] = csvArray[i][9 + 5*j];
+            ship_v[i-3][j] = csvArray[i][10 + 5*j];
+            ship_nextGoalTime[i-3][j] = csvArray[i][11 + 5*j];
         }
     }
     //console.log("day初日" + day[0]);//行数
@@ -59,7 +67,7 @@ function pursue() {
         setTimeout(draw, 1000/FPS);
     };
     
-    xhr.open("get", "data.csv", true);
+    xhr.open("get", "data2.csv", true);
     xhr.send(null);
 }
 
