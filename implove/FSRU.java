@@ -4,7 +4,7 @@ public class FSRU {
 	public static final int T2 = 54;//係船時間
 	public static final int prepareTime = 10;//係船の準備等にかかる総時間
 	private double amount = 0;//総量
-	public static final double price = 100000;//LNGの単価
+	public static final double price = 70;//LNGの単価
 	private int prevShipId;
 	private boolean vacant = true;//係船可能かどうか
 	private boolean nextVacant = true;
@@ -27,6 +27,16 @@ public class FSRU {
 	}
 	
 	public double calcProfit() {
+		System.out.println("輸送費");
+		System.out.println(this.transportCost);
+		System.out.println("建設費");
+		System.out.println(this.constractCost);
+		System.out.println("固定費");
+		System.out.println(this.fixedCost);
+		System.out.println("LNG");
+		System.out.println(this.amount);
+		System.out.println("売上");
+		System.out.println(FSRU.price*this.amount);
 		return FSRU.price * this.amount-(this.transportCost+this.constractCost+this.fixedCost);
 	}
 	public boolean getVacant(){

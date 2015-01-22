@@ -40,17 +40,17 @@ public class LNG_ship {
 		this.V = input_V;
 	}
 	public void calcLeavingTime(Wave wave, int time){
-		System.out.print("calcLeavingTime :"+this.id);
+		//System.out.print("calcLeavingTime :"+this.id);
 		int timeLeft;
 		//FLNGの船
 		if(this.status==Status.flng){
-			System.out.print(" FLNG");
+			//System.out.print(" FLNG");
 			//作業中の船
 			if(this.loadingTime < this.finishTime){
-				System.out.println(" loading");
+				//System.out.println(" loading");
 				timeLeft = finishTime - loadingTime;//出発までの残り時間
 				//時刻の影響を考える
-				int hour = (time + timeLeft) % 24;
+				int hour = (time + timeLeft-1) % 24;
 				//夜間出発予定
 				if(hour>17){
 					timeLeft += 24 + 8 - hour;
@@ -64,7 +64,7 @@ public class LNG_ship {
 				
 				//波による影響を考える
 				if(timeLeft<6){
-					if(time/6 == (time+timeLeft)/6){
+					if(time/6 == (time+timeLeft-1)/6){
 						if(wave.enableToLoad()){
 							//そのまま
 						}
@@ -78,7 +78,7 @@ public class LNG_ship {
 			}
 			//待っている、出発直前の船
 			else{
-				System.out.println("　waiting");
+				//System.out.println("　waiting");
 				//夜間で待っている船
 				if(time<8 || time>17){
 					timeLeft = 8 - time;
@@ -99,7 +99,7 @@ public class LNG_ship {
 		}
 		//航海中のもの
 		else {
-			System.out.print(" sailing or FSRU");
+			//System.out.print(" sailing or FSRU");
 			timeLeft = this.prevShip.leavingTime + FLNG.T1;
 			//時刻の影響を考える
 			int hour = (time + timeLeft) % 24;
@@ -115,38 +115,38 @@ public class LNG_ship {
 			}
 			//波による影響を考える
 			if(timeLeft<6){
-				if(time/6 == (time+timeLeft)/6){
-					System.out.print(" wave");
+				if(time/6 == (time+timeLeft-1)/6){
+					//System.out.print(" wave");
 					if(wave.enableToLoad()){
 						//そのまま
-						System.out.println("◯");
+						//System.out.println("◯");
 					}
 					else{
 						//高波であることがわかっている場合
 						timeLeft += 6 - (time+timeLeft)%6;
-						System.out.println("☓");
+						//System.out.println("☓");
 					}
 				}
 				else{
-					System.out.print(" wave");
+					//System.out.print(" wave");
 				}
 			}
 			else{
-				System.out.println();
+				//System.out.println();
 			}
 		}
 		this.leavingTime = timeLeft;
 	}
 	//FLNGに船がなかった場合の末尾の船のLeavingTimeを計算(thisは先頭の船)
 	public void calcLeavingTimeForVacant(Wave wave, int time){
-		System.out.print("calcLeavingTimeForVacant :"+this.prevShip.getId());
+		//System.out.print("calcLeavingTimeForVacant :"+this.prevShip.getId());
 		//最速で向かい、夜間、高波の時をさけるように速度を調整
 		int timeLeft;
 		if(this.status == Status.sailing){
-			System.out.print(" sailing");
+			//System.out.print(" sailing");
 			//flngに向かう
 			if(this.destination == Status.flng){
-				System.out.print(" to FLNG");
+				//System.out.print(" to FLNG");
 				timeLeft = (int)Math.ceil((LNG_ship.L - this.position)/LNG_ship.V_max);
 				int hour = (timeLeft + time)%24;
 				//夜間着の場合
@@ -161,37 +161,37 @@ public class LNG_ship {
 				}
 				//波による影響を考える
 				if(timeLeft<6){
-					if(time/6 == (time+timeLeft)/6){
-						System.out.print(" wave");
+					if(time/6 == (time+timeLeft-1)/6){
+						//System.out.print(" wave");
 						if(wave.enableToLoad()){
 							//そのまま
-							System.out.println("◯");
+							//System.out.println("◯");
 						}
 						else{
 							//高波であることがわかっている場合
 							timeLeft += 6 - (time+timeLeft)%6;
-							System.out.println("☓");
+							//System.out.println("☓");
 						}
 					}
 					else{
-						System.out.println("");
+						//System.out.println("");
 					}
 				}
 				else{
-					System.out.println();
+					//System.out.println();
 				}
 				this.prevShip.setLeavingTime(timeLeft);
 			}
 			//fsruに向かう
 			else{
-				System.out.println(" to FSRU");
+				//System.out.println(" to FSRU");
 				timeLeft = (int)Math.ceil(this.position/LNG_ship.V_max) + (int)Math.ceil(LNG_ship.L/LNG_ship.V_max) + FSRU.T2;
 				this.prevShip.setLeavingTime(timeLeft);
 			}
 		}
 		//FSRUにいる場合
 		else if(this.status == Status.fsru){
-			System.out.println(" FSRU");
+			//System.out.println(" FSRU");
 			timeLeft = FSRU.T2 - this.loadingTime + (int)Math.ceil(LNG_ship.L/V_max);
 			this.prevShip.setLeavingTime(timeLeft);
 		}
@@ -214,7 +214,7 @@ public class LNG_ship {
 		//燃料(kg/km)
 		double FO = 6.87 / 100000 * (2.3693 * this.amount +1660)  * Math.pow((2.978* this.amount + 1660),-1/3)  * this.V*this.V;
 		//燃料費（円/kg）
-		double fuelCost = 555153.0;
+		double fuelCost = 49.0;
 		//一時間あたりの輸送費
 		this.transportCost += fuelCost * FO * input_l;
 	}

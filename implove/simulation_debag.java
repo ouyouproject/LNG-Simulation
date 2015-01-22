@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class simulation {
+public class simulation_debag {
 	//パラメータ
 	private static int N = 10;
 	private static double W0 = 200000;
@@ -89,23 +89,23 @@ public class simulation {
 				
 				//書き込み
 				pwPrint(pw);
-				//System.out.println("=====================================================");
-				//System.out.println(day+"日目"+time+"時");
-				//System.out.println(wave.toString());
+				System.out.println("=====================================================");
+				System.out.println(day+"日目"+time+"時");
+				System.out.println(wave.toString());
 				//FLNGで汲み上げ
 				flng.getLNG();
 				
-				//System.out.println("-------------");
+				System.out.println("-------------");
 				//各船が行動
 				for(int i=0; i<N; i++){
 					LNG_ship ship = shipArray[i];
 					ship.action(flng,fsru,wave,time);
-					//System.out.println(ship.toString());
-					//System.out.println("-------------");
+					System.out.println(ship.toString());
+					System.out.println("-------------");
 				}
-				//System.out.println(flng.toString());
-				//System.out.println();
-				//System.out.println(fsru.toString());
+				System.out.println(flng.toString());
+				System.out.println();
+				System.out.println(fsru.toString());
 				
 				tick(pw);
 			}
@@ -130,12 +130,12 @@ public class simulation {
 			time = 0;
 			day++;
 			//30日まで実験
-			/*
+			
 			if(day>=50){
 				pw.close();
 				System.exit(1);
 			}
-			*/
+			
 		}
 	}
 	//csv出力
