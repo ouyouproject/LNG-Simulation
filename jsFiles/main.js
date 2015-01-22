@@ -40,7 +40,7 @@ function CsvToArray(csvArray){//csvを配列に代入
         FLNG_amount[i-2] = csvArray[i][5];
         FLNG_loading[i-2] = csvArray[i][6];
         for(var j = 0; j < number_of_ships; j++){
-            ship_position[i-2][j] = csvArray[i][7 + 3*j]/4;//画面と合わせるために割る4
+            ship_position[i-2][j] = csvArray[i][7 + 3*j]/4*2.0/5.0;//画面と合わせるために割る4
             ship_amount[i-2][j] = csvArray[i][8 + 3*j];
             ship_loadingTime[i-2][j] = csvArray[i][9 + 3*j];
         }
@@ -89,10 +89,10 @@ function draw(){
     for(var j = 0; j < number_of_ships; j++){
         if(ship_amount[timecounter][j] == 0){
             context.fillStyle = 'yellow';
-            context.fillRect(ship_position[timecounter][j],CELL_SIZE*j,CELL_SIZE,CELL_SIZE);
+            context.fillRect(ship_position[timecounter][j],(CELL_SIZE + 10)*j,CELL_SIZE,CELL_SIZE);
         }else{
             context.fillStyle = 'red';
-            context.fillRect(ship_position[timecounter][j],CELL_SIZE*j,CELL_SIZE,CELL_SIZE);
+            context.fillRect(ship_position[timecounter][j],(CELL_SIZE + 10)*j,CELL_SIZE,CELL_SIZE);
         }
     }
     write_wave_height();
