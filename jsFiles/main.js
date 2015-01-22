@@ -107,6 +107,7 @@ function draw(){
             context.fillText(Math.round(ship_amount[timecounter][j]/100.0), ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10);
         }
     }
+    write_day_time();
     write_wave_height();
     //write_amount_of_ships();
     write_amount_of_FSRU();
@@ -169,4 +170,12 @@ function write_amount_of_FLNG(){
         amount_of_FLNG.removeChild(amount_of_FLNG.childNodes[0]);
     }
     amount_of_FLNG.appendChild(text);
+}
+
+function write_day_time(){
+    var text=document.createTextNode("Day:" + day[timecounter] + " Time:" + time[timecounter]);
+    if(day_time.childNodes.length != 0){
+        day_time.removeChild(day_time.childNodes[0]);
+    }
+    day_time.appendChild(text);
 }
