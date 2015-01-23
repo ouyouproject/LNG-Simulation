@@ -11,6 +11,7 @@ public class FLNG {
 	private int prevShipId;
 	private boolean nextVacant = true;//次の時間にvacantがtrueか
 	private double amount;//LNGの量
+	private double idealAmount;//理想的なLNGの量
 	public FLNG(double input_W0) { 
 		this.W0 = input_W0;
 	}
@@ -40,6 +41,24 @@ public class FLNG {
 	}
 	public void setVacant(boolean input){
 		this.vacant = input;
+	}
+	public void updateIdealAmount(int day, int time){
+		int sumTime = (day-1)*24 + time-8;
+		int start = (int) Math.ceil(LNG_ship.L/LNG_ship.V_max);
+		if(sumTime<=start){
+			this.idealAmount = sumTime*FLNG.Q;
+		}
+		else{
+			this.idealAmount = start*FLNG.Q - sumTime*(start*FLNG.Q)/(LngSimulater.finish_year*365*24-8-start);
+		}
+	}
+	//later後の理想LNG値を返す
+	public double calcIdealAmount(int later){
+		int start = (int) Math.ceil(LNG_ship.L/LNG_ship.V_max);
+		double dy = start*FLNG.Q;
+		double dx = LngSimulater.finish_year*365*24-8-start;
+		double steep = dy/dx;
+		return this.idealAmount-steep*later;
 	}
 	
 	//係船
@@ -71,12 +90,13 @@ public class FLNG {
 		return "FLNG\nLNG\t"+this.amount+"\nvacant\t"+this.vacant;
 	}
 	public String toCsv(){
-		String result = this.amount+",";
+		String result = this.amount+","+this.idealAmount+",";
 		if(this.vacant){
-			return result+0;
+			result+=0;
 		}
 		else{
-			return result+1;
+			result+=1;
 		}
+		return result+","+this.prevShipId;
 	}
 }

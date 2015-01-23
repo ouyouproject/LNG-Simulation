@@ -91,11 +91,12 @@ public class FSRU {
 	public String toCsv(){
 		String result = this.amount+",";
 		if(this.vacant){
-			return result+0;
+			result+=0;
 		}
 		else{
-			return result+1;
+			result+=1;
 		}
+		return result + ","+ this.prevShipId;
 	}
 
 	

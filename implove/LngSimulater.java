@@ -14,7 +14,7 @@ public class LngSimulater implements Simulater{
 	private int time;//8時から
 	private int day;
 	
-	private final int finish_year = 3;//三年で終了
+	public static final int finish_year = 3;//三年で終了
 	
 	private FLNG flng;
 	private FSRU fsru;

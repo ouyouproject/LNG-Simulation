@@ -9,8 +9,10 @@ FSRU_amount = [];
 FSRU_loading = [];
 FSRU_prevShip = [];
 FLNG_amount = [];
+FLNG_idealAmount = [];
 FLNG_loading = [];
 FLNG_prevShip = [];
+ships_waitingTime = [];
 number_of_ships = 0;
 ship_position = [];//以下二次元配列にし、一つ目のインデックスは他のと同じ（行番号てきな）2つ目のインデックスは船の番号
 ship_amount = [];
@@ -53,15 +55,17 @@ function CsvToArray(csvArray){//csvを配列に代入
         FSRU_loading[i-3] = csvArray[i][4];
         FSRU_prevShip[i-3] = csvArray[i][5];
         FLNG_amount[i-3] = csvArray[i][6];
-        FLNG_loading[i-3] = csvArray[i][7];
-        FLNG_prevShip[i-3] = csvArray[i][8];
+        FLNG_idealAmount[i-3] = csvArray[i][7];
+        FLNG_loading[i-3] = csvArray[i][8];
+        FLNG_prevShip[i-3] = csvArray[i][9];
+        ships_waitingTime[i-3] = csvArray[i][10];
         for(var j = 0; j < number_of_ships; j++){
-            ship_position[i-3][j] = csvArray[i][9 + 7*j]/4*2.0/(length/1000);//画面と合わせるために割る4
-            ship_amount[i-3][j] = csvArray[i][10 + 7*j];
-            ship_loadingTime[i-3][j] = csvArray[i][11 + 7*j];
-            ship_status[i-3][j] = csvArray[i][12 + 7*j];
-            ship_v[i-3][j] = csvArray[i][13 + 7*j];
-            ship_nextGoalTime[i-3][j] = csvArray[i][14 + 7*j];
+            ship_position[i-3][j] = csvArray[i][11 + 7*j]/4*2.0/(length/1000);//画面と合わせるために割る4
+            ship_amount[i-3][j] = csvArray[i][12 + 7*j];
+            ship_loadingTime[i-3][j] = csvArray[i][13 + 7*j];
+            ship_status[i-3][j] = csvArray[i][14 + 7*j];
+            ship_v[i-3][j] = csvArray[i][15 + 7*j];
+            ship_nextGoalTime[i-3][j] = csvArray[i][16 + 7*j];
         }
     }
     //console.log("day初日" + day[0]);//行数
