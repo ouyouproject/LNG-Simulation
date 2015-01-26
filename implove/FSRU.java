@@ -9,15 +9,18 @@ public class FSRU {
 	private boolean vacant = true;//係船可能かどうか
 	private boolean nextVacant = true;
 	private double transportCost=0;//輸送費の合計
-	private double constractCost;//三年分の固定費（円）
+	private double constructCost;//三年分の固定費（円）
 	private double fixedCost;
 	
 	
 	public FSRU(double input_W0, double input_W, double input_N){
 		//建設費の計算
-		
+		//y=2E+08ln(x)-2E+09+1.1E+10
+		double FlngConstruct = 2*(Math.log(input_W0)+110-20)*Math.pow(10, 8);
+		double ShipConstruct = 2*(Math.log(input_W)-20)*Math.pow(10, 8)*input_N;
+		this.constructCost = FlngConstruct + ShipConstruct;
 		//固定費の計算
-		this.fixedCost = this.constractCost*0.005;
+		this.fixedCost = this.constructCost*0.005;
 	}
 	public int getPrevShipId(){
 		return this.prevShipId;
@@ -26,19 +29,23 @@ public class FSRU {
 		this.prevShipId = input;
 	}
 	
-	public double calcProfit() {
+	public double calcProfitPrint() {
 		System.out.println("輸送費");
 		System.out.println(this.transportCost);
 		System.out.println("建設費");
-		System.out.println(this.constractCost);
+		System.out.println(this.constructCost);
 		System.out.println("固定費");
 		System.out.println(this.fixedCost);
 		System.out.println("LNG");
 		System.out.println(this.amount);
 		System.out.println("売上");
 		System.out.println(FSRU.price*this.amount);
-		return FSRU.price * this.amount-(this.transportCost+this.constractCost+this.fixedCost);
+		return FSRU.price * this.amount-(this.transportCost+this.constructCost+this.fixedCost);
 	}
+	public double calcProfit() {
+		return FSRU.price * this.amount-(this.transportCost+this.constructCost+this.fixedCost);
+	}
+	
 	public boolean getVacant(){
 		return this.vacant;
 	}

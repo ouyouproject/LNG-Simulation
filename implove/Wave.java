@@ -8,6 +8,9 @@ public class Wave {
 	private boolean judge = true;//波高が以下であるか
 	private final int waveSpan = 6;//何時間ごとに波高が変化するか
 
+	public int getWaveSpan(){
+		return this.waveSpan;
+	}
 	
 	public void updateWave(int time){
 		//変化するとき

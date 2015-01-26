@@ -2,7 +2,6 @@ package implove;
 
 import implove.LNG_ship.Status;
 
-import java.awt.Frame;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,8 +20,8 @@ public class simulation {
 	private static double V;
 	private static double CancelLNG = 1.3;//理想値の何倍を基準に途中発射をするか
 	private static int CancelTime = 5;//何時間以上無駄があれば途中出発するか。最大15時間
-	private static double RestLNG = 0.5;//理想値の何倍を基準にFLNGを休ませるか
-	private static int StormRest = 1;//波の荒れているときに何期遅らせて到着させるか
+	private static double RestLNG = 0.0;//理想値の何倍を基準にFLNGを休ませるか
+	private static int StormRest = 5;//波の荒れているときに何期遅らせて到着させるか
 	
 	
 	private static int time = 8;//8時から
@@ -31,7 +30,6 @@ public class simulation {
 	public static final int finish_year = 3;//三年で終了
 	
 	private static int waitingTimes = 0;//船の累計待ち時間
-	private static double idealFLNG = 0;
 
 	private static List<Double> FLNG_values = new ArrayList<Double>();
 	private static List<String> FLNG_series = new ArrayList<String>();
@@ -57,24 +55,24 @@ public class simulation {
 			prams.append("W0,").append(W0).append(",W,").append(W).append(",N,").append(N).append(",FLNG position,").append(LNG_ship.L).append(",FSRU position,").append(0);
 			pw.println(prams.toString());
 			//ヘッダを入力
-			pw.print(" , ,wave,FSRU,,,FLNG,,,,Ships");
+			pw.print(" , ,wave,FSRU,,,FLNG,,,,,Ships");
 			//船インスタンスを生成
 			for(int i=0; i<N; i++){
-				shipArray[i] = new LNG_ship(W, V, i,LNG_ship.Status.sailing);
+				shipArray[i] = new LNG_ship(W, V, i,LNG_ship.Status.sailing,CancelLNG,CancelTime,RestLNG,StormRest);
 				if(i>0){
 					shipArray[i].setPrevShip(shipArray[i-1]);
 					shipArray[i-1].setPostShip(shipArray[i]);
 				}
-				pw.print(",ship"+i+",,,,,,");
+				pw.print(",ship"+i+",,,,,,,");
 			}
 			shipArray[0].setPrevShip(shipArray[N-1]);
 			shipArray[N-1].setPostShip(shipArray[0]);
 			fsru.setPrevShipId(N-1);
 			flng.setPrevShipId(N-1);
 			pw.println();
-			pw.print("day,time,enableLoad,amount,loading,prevShip,amount,ideal_amount,loading,prevShip,waitingTime");
+			pw.print("day,time,enableLoad,amount,loading,prevShip,amount,ideal_amount,condition,loading,prevShip,waitingTime");
 			for(int i=0; i<N; i++){
-				pw.print(",positon,amount,loadingTime,status,V,nextGoalTime, ");
+				pw.print(",positon,amount,loadingTime,status,V,nextGoalTime,finishTime, ");
 			}
 			pw.println();
 			
@@ -83,7 +81,7 @@ public class simulation {
 			//時刻ごとに実行
 			while(day<=365*finish_year){
 				flng.updateVacant();
-				flng.updateIdealAmount(day, time);
+				flng.updateIdealAmount(day, time,shipArray[0]);
 				fsru.updateVacant();
 				wave.updateWave(time);
 				
@@ -107,21 +105,21 @@ public class simulation {
 				if(flng_ship.getStatus()!=Status.flng){
 					nextShip = flng_ship.getPostShip();
 					if(nextShip.getStatus()!=Status.flng){
-						nextShip.calcLeavingTimeForVacant(wave, time);
+						nextShip.calcLeavingTimeForVacant(wave, time, flng);
 					}
 					else{
-						nextShip.calcLeavingTime(wave, time);
+						nextShip.calcLeavingTime(wave, time, flng);
 						flng_ship = nextShip;
 					}
 					
 				}
 				//flngにprevShipがあるとき
 				else{
-					flng_ship.calcLeavingTime(wave, time);
+					flng_ship.calcLeavingTime(wave, time, flng);
 				}
 				for(int i=1; i<N; i++){
 					nextShip = flng_ship.getPostShip();
-					nextShip.calcLeavingTime(wave, time);
+					nextShip.calcLeavingTime(wave, time, flng);
 					flng_ship = nextShip;
 				}
 				
@@ -160,7 +158,7 @@ public class simulation {
 			}
 			pw.close();
 			//結果を表示
-			System.out.println(fsru.calcProfit());
+			System.out.println(fsru.calcProfitPrint());
 			plotFLNGGraph();
 			plotWaitingGraph();
 		}
@@ -176,17 +174,16 @@ public class simulation {
 			time = 0;
 			day++;
 			//30日まで実験
-			
-			if(day>=50){
+			/*
+			if(day>=100){
 				pw.close();
-				/*
+				System.out.println(FLNG_values.toString());
 				plotFLNGGraph();
 				plotWaitingGraph();
 				waitForThreeSeconds(10);
 				System.exit(1);
-				*/
 			}
-			
+			*/
 		}
 	}
 	//csv出力
@@ -203,6 +200,7 @@ public class simulation {
 		pw.println();
 	}
 	
+	//折れ線グラフの作成
 	private static void plotFLNGGraph(){
 		double[] v = new double[FLNG_values.size()];
 		for(int i=0; i<FLNG_values.size(); i++){

@@ -10,6 +10,7 @@ FSRU_loading = [];
 FSRU_prevShip = [];
 FLNG_amount = [];
 FLNG_idealAmount = [];
+FLNG_condition = [];
 FLNG_loading = [];
 FLNG_prevShip = [];
 ships_waitingTime = [];
@@ -20,6 +21,7 @@ ship_loadingTime = [];
 ship_status = [];
 ship_v = [];
 ship_nextGoalTime = [];
+ship_finishTime = [];
 timecounter = 0;
 
 function createArray(csvData) {
@@ -46,6 +48,7 @@ function CsvToArray(csvArray){//csvを配列に代入
         ship_status[i-3] = new Array(number_of_ships);
         ship_v[i-3] = new Array(number_of_ships);
         ship_nextGoalTime[i-3] = new Array(number_of_ships);
+        ship_finishTime[i-3] = new Array(number_of_ships);
     }
     for(var i = 3; i < csvArray.length - 1; i++){
         day[i-3] = csvArray[i][0];
@@ -56,16 +59,18 @@ function CsvToArray(csvArray){//csvを配列に代入
         FSRU_prevShip[i-3] = csvArray[i][5];
         FLNG_amount[i-3] = csvArray[i][6];
         FLNG_idealAmount[i-3] = csvArray[i][7];
-        FLNG_loading[i-3] = csvArray[i][8];
-        FLNG_prevShip[i-3] = csvArray[i][9];
-        ships_waitingTime[i-3] = csvArray[i][10];
+        FLNG_condition[i-3] = csvArray[i][8]
+        FLNG_loading[i-3] = csvArray[i][9];
+        FLNG_prevShip[i-3] = csvArray[i][10];
+        ships_waitingTime[i-3] = csvArray[i][11];
         for(var j = 0; j < number_of_ships; j++){
-            ship_position[i-3][j] = csvArray[i][11 + 7*j]/4*2.0/(length/1000);//画面と合わせるために割る4
-            ship_amount[i-3][j] = csvArray[i][12 + 7*j];
-            ship_loadingTime[i-3][j] = csvArray[i][13 + 7*j];
-            ship_status[i-3][j] = csvArray[i][14 + 7*j];
-            ship_v[i-3][j] = csvArray[i][15 + 7*j];
-            ship_nextGoalTime[i-3][j] = csvArray[i][16 + 7*j];
+            ship_position[i-3][j] = csvArray[i][12 + 8*j]/4*2.0/(length/1000);//画面と合わせるために割る4
+            ship_amount[i-3][j] = csvArray[i][13 + 8*j];
+            ship_loadingTime[i-3][j] = csvArray[i][14 + 8*j];
+            ship_status[i-3][j] = csvArray[i][15 + 8*j];
+            ship_v[i-3][j] = csvArray[i][16 + 8*j];
+            ship_nextGoalTime[i-3][j] = csvArray[i][17 + 8*j];
+            ship_finishTime[i-3][j] = csvArray[i][18 + 8*j]
         }
     }
     //console.log("day初日" + day[0]);//行数
@@ -127,6 +132,7 @@ function draw(){
     //write_amount_of_ships();
     write_amount_of_FSRU();
     write_amount_of_FLNG();
+    write_condition_of_FLNG();
     timecounter++;
     //console.log(timecounter);
     setTimeout(draw, 1000/FPS);
@@ -193,4 +199,24 @@ function write_day_time(){
         day_time.removeChild(day_time.childNodes[0]);
     }
     day_time.appendChild(text);
+}
+
+function write_condition_of_FLNG(){
+    var text=document.createTextNode("FLNG:"+FLNG_condition[timecounter]);
+    if(FLNG_condition[timecounter]=="shortage"){
+        var element = document.getElementById("condition_of_FLNG");
+        element.style.color = 'blue';
+    }
+    else if(FLNG_condition[timecounter]=="full"){
+        var element = document.getElementById("condition_of_FLNG");
+        element.style.color = 'red';
+    }
+    else{
+        var element = document.getElementById("condition_of_FLNG");
+        element.style.color = 'black';
+    }
+    if(condition_of_FLNG.childNodes.length!=0){
+        condition_of_FLNG.removeChild(condition_of_FLNG.childNodes[0]);
+    }
+    condition_of_FLNG.appendChild(text);
 }

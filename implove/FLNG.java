@@ -12,6 +12,9 @@ public class FLNG {
 	private boolean nextVacant = true;//次の時間にvacantがtrueか
 	private double amount;//LNGの量
 	private double idealAmount;//理想的なLNGの量
+	public static enum LngCondition{full, normal, shortage;} 
+	private LngCondition condition = LngCondition.normal;
+	
 	public FLNG(double input_W0) { 
 		this.W0 = input_W0;
 	}
@@ -42,20 +45,26 @@ public class FLNG {
 	public void setVacant(boolean input){
 		this.vacant = input;
 	}
-	public void updateIdealAmount(int day, int time){
+	public LngCondition getLngCondition(){
+		return this.condition;
+	}
+	public void setLngCondition(LngCondition input){
+		this.condition = input;
+	}
+	public void updateIdealAmount(int day, int time, LNG_ship ship){
 		int sumTime = (day-1)*24 + time-8;
 		int start = (int) Math.ceil(LNG_ship.L/LNG_ship.V_max);
 		if(sumTime<=start){
 			this.idealAmount = sumTime*FLNG.Q;
 		}
 		else{
-			this.idealAmount = start*FLNG.Q - sumTime*(start*FLNG.Q)/(LngSimulater.finish_year*365*24-8-start);
+			this.idealAmount = start*FLNG.Q - (sumTime-start)*(start*FLNG.Q-(ship.getW()-FLNG.Q*FLNG.T1))/(LngSimulater.finish_year*365*24-8-start);
 		}
 	}
 	//later後の理想LNG値を返す
-	public double calcIdealAmount(int later){
+	public double calcIdealAmount(int later,LNG_ship ship){
 		int start = (int) Math.ceil(LNG_ship.L/LNG_ship.V_max);
-		double dy = start*FLNG.Q;
+		double dy = start*FLNG.Q - (ship.getW()-FLNG.Q*FLNG.T1);
 		double dx = LngSimulater.finish_year*365*24-8-start;
 		double steep = dy/dx;
 		return this.idealAmount-steep*later;
@@ -75,7 +84,15 @@ public class FLNG {
 				addLNG = this.amount;
 			}
 			ship.addAmount(addLNG);
-			this.amount-=addLNG;
+			//容量を超えていた場合
+			if(ship.getAmount()>ship.getW()){
+				this.amount -= addLNG - (ship.getAmount()-ship.getW());
+				ship.setAmount(ship.getW());
+			}
+			else{
+				this.amount-=addLNG;
+			}
+			
 		}
 		
 		
@@ -87,10 +104,10 @@ public class FLNG {
 	}
 	@Override
 	public String toString() {
-		return "FLNG\nLNG\t"+this.amount+"\nvacant\t"+this.vacant;
+		return "FLNG\nLNG\t"+this.amount+"\nvacant\t"+this.vacant+"\ncondition\t"+this.condition.toString();
 	}
 	public String toCsv(){
-		String result = this.amount+","+this.idealAmount+",";
+		String result = this.amount+","+this.idealAmount+","+this.condition.toString()+",";
 		if(this.vacant){
 			result+=0;
 		}
