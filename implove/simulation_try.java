@@ -75,8 +75,6 @@ public class simulation_try {
 			}
 			pw.println();
 			
-			
-			
 			//時刻ごとに実行
 			while(day<=365*finish_year){
 				flng.updateVacant();

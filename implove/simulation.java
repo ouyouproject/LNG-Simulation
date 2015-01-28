@@ -21,7 +21,7 @@ public class simulation {
 	private static double CancelLNG = 1.3;//理想値の何倍を基準に途中発射をするか
 	private static int CancelTime = 5;//何時間以上無駄があれば途中出発するか。最大15時間
 	private static double RestLNG = 0.0;//理想値の何倍を基準にFLNGを休ませるか
-	private static int StormRest = 5;//波の荒れているときに何期遅らせて到着させるか
+	private static int StormRest = 3;//波の荒れているときに何期遅らせて到着させるか
 	
 	
 	private static int time = 8;//8時から

@@ -2,6 +2,10 @@ package implove;
 
 import java.util.Arrays;
 
+import javax.swing.JFrame;
+
+import org.jfree.chart.plot.PlotOrientation;
+
 public class ArtificalBeeColoney {
 	private Simulater simulater;//目的関数
 	private boolean maximize;//最大化するか否か
@@ -23,6 +27,10 @@ public class ArtificalBeeColoney {
 	private double[] x_best;//暫定最適解
 	private double fit_best;//暫定最適解の適合度
 	private double f_best;//暫定最適解の目的関数値
+	private boolean plot=false;//グラフ出力を行うか
+	private double[] values;
+	private String[] series;
+	private String[] categories;
 	
 	//public static enum method {ABC,AC_ABC,GS_ABC;}
 	public static enum method {ABC,GS_ABC;}
@@ -33,7 +41,8 @@ public class ArtificalBeeColoney {
 								double [] input_x_max, 
 								int input_population,
 								int input_genelation,
-								int input_limit){
+								int input_limit,
+								boolean input_plot){
 		//引数を設置
 		this.simulater = input_simulater;
 		this.maximize = input_maximize;
@@ -43,6 +52,7 @@ public class ArtificalBeeColoney {
 		this.genelation = input_genelation;
 		this.limit = input_limit;
 		this.demention = x_max.length;
+		this.plot = input_plot;
 	}
 	
 	public double[] solveABC(){
@@ -83,7 +93,7 @@ public class ArtificalBeeColoney {
 			//最良個体の更新
 			int index_b = this.argMax(this.fit);
 			if(this.fit[index_b] > this.fit_best){
-				this.x_best = this.X[index_b];
+				this.x_best = cloneArray(this.X[index_b]);
 				this.fit_best = this.fit[index_b];
 				this.f_best = this.f[index_b];
 				System.out.println("x: "+Arrays.toString(this.x_best));
@@ -99,27 +109,50 @@ public class ArtificalBeeColoney {
 					}
 				}
 			}
-		
-		g++;
+			//グラフ出力用の値をセット
+			if(this.plot){
+				this.values[g] = this.f_best;
+				this.series[g] = "暫定最適値";
+				this.categories[g] = Integer.toString(g);
+			}
+			g++;
+		}
+		if(this.plot){
+			plotBestF();
 		}
 		return this.makeReturn(this.x_best, this.f_best);
 	}
 	
 	//初期化
 	private void initialize(){
-		X = new double[this.population][this.demention];
-		times = new int[this.population];
-		probability = new double[this.population];
+		this.X = new double[this.population][this.demention];
+		this.f = new double[population];
+		this.fit = new double[population];
+		this.times = new int[this.population];
+		this.probability = new double[this.population];
+		this.values = new double[this.genelation+1];
+		this.series = new String[this.genelation+1];
+		this.categories = new String[this.genelation+1];
 		for(int i=0; i<this.population; i++){
 			for(int j=0; j<this.demention; j++){
 				//Xをランダムで設定
 				this.X[i][j] = this.makeRandam(this.x_min[j], this.x_max[j]);
 			}
-			this.f = new double[population];
-			this.fit = new double[population];
 			this.f[i] = this.simulater.simulate(X[i]);
 			this.fit[i] = this.calcFit(this.f[i]);
 		}
+		//暫定最適解のセット
+		int index_b = this.argMax(this.fit);
+		this.x_best = cloneArray(this.X[index_b]);
+		this.fit_best = this.fit[index_b];
+		this.f_best = this.f[index_b];
+		if(this.plot){
+			values[0] = this.f_best;
+			series[0] = "暫定最適値";
+			categories[0] = Integer.toString(0);
+		}
+		System.out.println("x: "+Arrays.toString(this.x_best));
+		System.out.println("f: "+this.f_best);
 	}
 	
 	//探索解を更新
@@ -133,6 +166,7 @@ public class ArtificalBeeColoney {
 			this.fit[i] = this.calcFit(f_v);
 			this.f[i] = f_v;
 			this.times[i] = 0;
+			//System.out.println("update");
 		}
 		else{
 			this.times[i]++;
@@ -268,5 +302,12 @@ public class ArtificalBeeColoney {
 			}
 		}
 		return index;
+	}
+	private void plotBestF(){
+		LineGraph frame = new LineGraph("暫定最適解の推移", "n世代目", "目的関数値", PlotOrientation.VERTICAL,false, false, false, this.values, this.series, this.categories);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frame.setBounds(10, 10, 500, 500);
+	    frame.setTitle("n回平均の値の推移");
+	    frame.setVisible(true);
 	}
 }

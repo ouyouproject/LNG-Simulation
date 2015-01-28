@@ -16,7 +16,7 @@ public class LngSimulater implements Simulater{
 	private int StormRest;//波の荒れているときに何期遅らせて到着させるか
 	
 	
-	private final int n = 10; //モンテカルロの繰り返し回数
+	private int n; //モンテカルロの繰り返し回数
 	
 	private int time;//8時から
 	private int day;
@@ -28,6 +28,9 @@ public class LngSimulater implements Simulater{
 	private LNG_ship[] shipArray;
 	private Wave wave;
 	
+	public LngSimulater(int input) {
+		this.n = input;
+	}
 	
 	//n回シミュレーションした結果を返す
 	@Override
@@ -45,6 +48,7 @@ public class LngSimulater implements Simulater{
 		this.CancelTime = (int) Math.floor(x[4]);
 		this.RestLNG = x[5];
 		this.StormRest = (int) Math.floor(x[6]);
+		
 		
 		this.flng = new FLNG(this.W0);
 		this.fsru = new FSRU(this.W0, this.W, this.N);

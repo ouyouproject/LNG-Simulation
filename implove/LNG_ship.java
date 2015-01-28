@@ -138,7 +138,16 @@ public class LNG_ship {
 						timeLeft = 1;
 					}
 					else{
-						timeLeft = this.leavingTime-1;
+						if(time<8){
+							timeLeft = 8 - time;
+						}
+						else if(time>17){
+							timeLeft = 24 + 8 -time;
+						}
+						else{
+							timeLeft = this.leavingTime-1;
+							System.out.println("error");
+						}
 					}
 				}
 				else{
@@ -415,7 +424,6 @@ public class LNG_ship {
 							this.startLoading = true;
 							flng.setPrevShipId(this.id);
 							flng.setVacant(false);
-							this.finishTime = FLNG.T1;
 							
 							//FLNGの状態をセット
 							int hour = (FLNG.T1+time)%24;
@@ -451,7 +459,7 @@ public class LNG_ship {
 									//無駄が多ければ17:00出発
 									if(nightWaitingTime>=this.cancelTime){
 										//後の船が到着可能であるか
-										int nextArrival = (int)Math.ceil(LNG_ship.L-this.postShip.getPosition()/LNG_ship.V_max);
+										int nextArrival = (int)Math.ceil((LNG_ship.L-this.postShip.getPosition())/LNG_ship.V_max);
 										int nextLeave = FLNG.T1 - (8-17+24-nightWaitingTime);
 										if(nextLeave>=nextArrival){
 											this.finishTime = nextLeave;
@@ -574,6 +582,7 @@ public class LNG_ship {
 				this.addTransportCost(this.V-(this.position-LNG_ship.L));
 				this.position = LNG_ship.L;
 				this.status = this.destination;
+				this.finishTime = FLNG.T1;
 			}
 			else{
 				this.addTransportCost(this.V);
