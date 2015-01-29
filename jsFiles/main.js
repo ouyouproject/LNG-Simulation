@@ -84,7 +84,7 @@ function pursue() {
         createArray(xhr.responseText);
         start();
         draw();
-        setTimeout(draw, 1000/FPS);
+        //setTimeout(draw, 1000/FPS);
     };
     
     xhr.open("get", "data3.csv", true);
@@ -124,7 +124,7 @@ function draw(){
             context.fillStyle = 'red';
             context.fillRect(ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10,CELL_SIZE,CELL_SIZE);
             context.fillStyle = "black";
-            context.fillText(Math.round(ship_amount[timecounter][j]/100.0), ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10);
+            context.fillText(Math.round(ship_amount[timecounter][j]/700.0), ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10);
         }
     }
     write_day_time();
@@ -135,7 +135,7 @@ function draw(){
     write_condition_of_FLNG();
     timecounter++;
     //console.log(timecounter);
-    setTimeout(draw, 1000/FPS);
+    action = setTimeout(draw, 1000/FPS);
 }
 
 function write_wave_height(){
@@ -220,3 +220,13 @@ function write_condition_of_FLNG(){
     }
     condition_of_FLNG.appendChild(text);
 }
+
+function onButtonClick_stop(){
+    clearTimeout(action);
+}
+
+function onButtonClick_start(){
+    draw();
+}
+
+
