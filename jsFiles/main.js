@@ -87,7 +87,7 @@ function pursue() {
         setTimeout(draw, 1000/FPS);
     };
     
-    xhr.open("get", "data3.csv", true);
+    xhr.open("get", "data3_save.csv", true);
     xhr.send(null);
 }
 
@@ -119,12 +119,12 @@ function draw(){
             context.fillStyle = 'yellow';
             context.fillRect(ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10,CELL_SIZE,CELL_SIZE);
             context.fillStyle = "black";
-            context.fillText(ship_amount[timecounter][j]/100.0, ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10);
+            context.fillText(ship_amount[timecounter][j]/W*100, ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10);
         }else{
             context.fillStyle = 'red';
             context.fillRect(ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10,CELL_SIZE,CELL_SIZE);
             context.fillStyle = "black";
-            context.fillText(Math.round(ship_amount[timecounter][j]/100.0), ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10);
+            context.fillText(Math.round(ship_amount[timecounter][j]/W*100), ship_position[timecounter][j],(CELL_SIZE + 10)*j + 10);
         }
     }
     write_day_time();
