@@ -84,7 +84,7 @@ function pursue() {
         createArray(xhr.responseText);
         start();
         draw();
-        setTimeout(draw, 1000/FPS);
+        //setTimeout(draw, 1000/FPS);
     };
     
     xhr.open("get", "data3_save.csv", true);
@@ -133,9 +133,10 @@ function draw(){
     write_amount_of_FSRU();
     write_amount_of_FLNG();
     write_condition_of_FLNG();
+    changebackground();
     timecounter++;
     //console.log(timecounter);
-    setTimeout(draw, 1000/FPS);
+    action = setTimeout(draw, 1000/FPS);
 }
 
 function write_wave_height(){
@@ -143,10 +144,12 @@ function write_wave_height(){
         var text=document.createTextNode("波的に出航可能ですよ");
         var element = document.getElementById("wave_height");
         element.style.color = 'black';
+        //document.body.style.backgroundColor = "white";
     }else{
         var text=document.createTextNode("やめたまえ");
         var element = document.getElementById("wave_height");
         element.style.color = 'red';
+        //document.body.style.backgroundColor = "#FA8072";
     }
     if(wave_height.childNodes.length != 0){
         wave_height.removeChild(wave_height.childNodes[0]);
@@ -220,3 +223,21 @@ function write_condition_of_FLNG(){
     }
     condition_of_FLNG.appendChild(text);
 }
+
+function onButtonClick_stop(){
+    clearTimeout(action);
+}
+
+function onButtonClick_start(){
+    draw();
+}
+
+function changebackground(){
+    if (enableLoad[timecounter] == 1 && 8 <= time[timecounter] && time[timecounter] <= 18){
+        document.body.style.backgroundColor = "white";
+    }else{
+        document.body.style.backgroundColor = "#FA8072";
+    }
+}
+
+
