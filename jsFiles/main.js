@@ -97,7 +97,7 @@ pursue();
 var SCREEN_SIZE = 515.0;                    // キャンバスの幅
 var SIDE_CELLS = 50.0;                     // 一辺のセルの数
 var CELL_SIZE = SCREEN_SIZE / SIDE_CELLS; // セルの幅
-var FPS = 8;                             // フレームレート
+var FPS = 12;                           // フレームレート
 var canvas;                     //= document.getElementById('world');
 var context;                    //= canvas.getContext('2d');
 
@@ -233,9 +233,12 @@ function onButtonClick_start(){
 }
 
 function changebackground(){
-    if (enableLoad[timecounter] == 1 && 8 <= time[timecounter] && time[timecounter] <= 18){
+    if (enableLoad[timecounter] == 1 && 8 <= time[timecounter] && time[timecounter] <= 17){
         document.body.style.backgroundColor = "white";
-    }else{
+    }else if(8 > time[timecounter] || time[timecounter] > 17){
+        document.body.style.backgroundColor = "#808080";
+    }
+    else{
         document.body.style.backgroundColor = "#FA8072";
     }
 }
